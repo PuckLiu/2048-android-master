@@ -1,0 +1,117 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <WebView
+        android:id="@+id/mainWebView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <FrameLayout
+        android:id="@+id/ly_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_bg">
+        <FrameLayout
+            android:id="@+id/ly_pic"
+            android:layout_width="240dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="145dp">
+            <ImageView
+                android:id="@+id/iv_pic"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:src="@drawable/logo_4"
+                android:scaleType="fitCenter"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/ly_level_container"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center">
+
+            <FrameLayout
+                android:id="@+id/btn_left"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="left|center_vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/arrow_left" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="3x3"
+                android:textColor="@color/font_color_black"
+                android:textSize="24sp" />
+
+            <FrameLayout
+                android:id="@+id/btn_right"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="right|center_vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/arrow_right" />
+            </FrameLayout>
+        </FrameLayout>
+        <FrameLayout
+            android:layout_width="240dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp">
+            <FrameLayout
+                android:id="@+id/btn_start"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="top"
+                android:layout_marginTop="15dp"
+                android:background="@color/start_red">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/start_game"
+                    android:textSize="20sp"
+                    android:textColor="@color/font_color_white"/>
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/btn_leader"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="bottom"
+                android:visibility="visible"
+                android:background="@color/tile8_color">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/leader_boards"
+                    android:textSize="20sp"
+                    android:textColor="@color/font_color_white"/>
+
+            </FrameLayout>
+        </FrameLayout>
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/ly_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|bottom"></FrameLayout>
+</FrameLayout>

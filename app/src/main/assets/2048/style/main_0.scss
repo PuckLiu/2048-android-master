@@ -1,0 +1,54 @@
+@import "helpers";
+@import "fonts/clear-sans.css";
+
+$field-width: 500px;
+$grid-spacing: 15px;
+$grid-row-cells: 4;
+$tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
+$tile-border-radius: 3px;
+
+$mobile-threshold: $field-width + 20px;
+
+.test {
+ width:$field-width;
+ height:$field-width;
+ margin:$grid-spacing;
+}
+
+@mixin game_test {
+    .game {
+     width:$field-width;
+      height:$field-width;
+      margin:$grid-spacing;
+    }
+}
+@include keyframes( move-up) {
+  0% {
+    top: 25px;
+    opacity: 1;
+  }
+
+  100% {
+    top: -50px;
+    opacity: 0;
+  }
+}
+
+    @include game_test;
+    $field-width: 280px;
+@include smaller($mobile-threshold) {
+  // Redefine variables for smaller screens
+
+  $grid-spacing: 10px;
+  $grid-row-cells: 4;
+  $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
+  $tile-border-radius: 3px;
+  $game-container-margin-top: 17px;
+    .test {
+    width:$field-width;
+    height:$field-width;
+    margin:$grid-spacing;
+    }
+    @include game_test;
+
+}
