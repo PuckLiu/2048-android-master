@@ -1,0 +1,28 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
+        // maven { "https://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+        maven { url 'https://jitpack.io' }
+        // maven { "https://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
