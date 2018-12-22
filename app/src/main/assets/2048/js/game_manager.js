@@ -8,6 +8,7 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
 
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
+  this.inputManager.on("share", this.share.bind(this));
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
   this.androidSupport = this.support();
   if (this.androidSupport) {
@@ -28,6 +29,16 @@ GameManager.prototype.restart = function () {
   this.storageManager.clearGameState();
   this.actuator.continueGame(); // Clear the game won/lost message
   this.setup();
+};
+
+GameManager.prototype.share = function () {
+  console.log("share click")
+  if(this.androidSupport) {
+  window.JavaScriptFunction.shareClick();
+  console.log("android support")
+  } else {
+  console.log("android not support ???")
+  }
 };
 
 // Keep playing after winning (allows going over 2048)

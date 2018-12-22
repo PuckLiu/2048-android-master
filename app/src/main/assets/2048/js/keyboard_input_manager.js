@@ -70,6 +70,7 @@ KeyboardInputManager.prototype.listen = function () {
 
   // Respond to button presses
   this.bindButtonPress(".retry-button", this.restart);
+  this.bindButtonPress(".share-button", this.share);
   this.bindButtonPress(".restart-button", this.restart);
   this.bindButtonPress(".keep-playing-button", this.keepPlaying);
 
@@ -125,6 +126,11 @@ KeyboardInputManager.prototype.listen = function () {
       self.emit("move", absDx > absDy ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
     }
   });
+};
+
+KeyboardInputManager.prototype.share = function (event) {
+  event.preventDefault();
+  this.emit("share");
 };
 
 KeyboardInputManager.prototype.restart = function (event) {
