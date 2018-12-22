@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -32,6 +33,7 @@ import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,7 +72,7 @@ import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private static final String MAIN_ACTIVITY_TAG = "2048_MainActivity";
+    private static final String TAG = "2048_MainActivity";
 
     private WebView mWebView;
     private long mLastBackPress;
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView ivPic;
     private TextView tvLevel;
     private FrameLayout adBannerContainer;
+    private ProgressBar loadingBar;
 
     private static final int RC_UNUSED = 5001;
     private static final int RC_SIGN_IN = 9001;
@@ -142,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         handleWebViewJs();
         loadAdBanner();
         loadAd();
-        startSignInIntent();
+//        startSignInIntent();
 
         pressBackToast = Toast.makeText(getApplicationContext(), R.string.press_back_again_to_exit,
                 Toast.LENGTH_SHORT);
@@ -165,6 +168,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mGoogleSignInClient = GoogleSignIn.getClient(this,
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).build());
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .requestIdToken("748166288949-nnoqs154pnf01id07968vnp6igfvdo44.apps.googleusercontent.com")
+//                .build();
+//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         initFacebook();
     }
 
@@ -178,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             isOrientationEnabled = Settings.System.getInt(getContentResolver(),
                     Settings.System.ACCELEROMETER_ROTATION) == 1;
         } catch (SettingNotFoundException e) {
-            Log.d(MAIN_ACTIVITY_TAG, "Settings could not be loaded");
+            Log.d(TAG, "Settings could not be loaded");
         }
 
         // If rotation isn't locked and it's a LARGE screen then add orientation changes based on sensor
@@ -201,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnLeader = (FrameLayout)findViewById(R.id.btn_leader);
         adBannerContainer = (FrameLayout)findViewById(R.id.ly_banner);
         ivPic = (ImageView)findViewById(R.id.iv_pic);
+        loadingBar = (ProgressBar)findViewById(R.id.loading_indicator);
 
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
@@ -279,9 +288,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        showAdAfterGameOver();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAdAfterGameOver();
+                            }
+                        });
                     }
-                },1200);
+                },2000);
             }
 
             @Override
@@ -295,12 +309,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @JavascriptInterface
             public void needShowAd() {
                 needShowAd = true;
-                showAdAfterGameOver();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAdAfterGameOver();
+                    }
+                });
             }
 
             @Override
+            @JavascriptInterface
             public void shareClick() {
-                shareToFacebook();
+                TLog.d("share click thread:" + Thread.currentThread().getName());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        shareToFacebook();
+                    }
+                });
             }
 
             @Override
@@ -426,6 +452,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             TLog.logE(e);
                         }
                     });
+        } else {
+            startSignInIntent();
         }
     }
 
@@ -438,16 +466,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void signInSilently() {
-        Log.d(MAIN_ACTIVITY_TAG, "signInSilently()");
+        Log.d(TAG, "signInSilently()");
         mGoogleSignInClient.silentSignIn().addOnCompleteListener(this,
                 new OnCompleteListener<GoogleSignInAccount>() {
                     @Override
                     public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
                         if (task.isSuccessful()) {
-                            Log.d(MAIN_ACTIVITY_TAG, "signInSilently(): success");
+                            Log.d(TAG, "signInSilently(): success");
                             onConnected(task.getResult());
                         } else {
-                            Log.d(MAIN_ACTIVITY_TAG, "signInSilently(): failure", task.getException());
+                            Log.d(TAG, "signInSilently(): failure", task.getException());
                             onDisconnected();
                         }
                     }
@@ -455,12 +483,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void onConnected(GoogleSignInAccount googleSignInAccount) {
-        Log.d(MAIN_ACTIVITY_TAG, "onConnected(): connected to Google APIs");
+        TLog.d("onConnected(): connected to Google APIs");
         mLeaderboardsClient = Games.getLeaderboardsClient(this, googleSignInAccount);
     }
 
     private void onDisconnected() {
-        Log.d(MAIN_ACTIVITY_TAG, "onDisconnected()");
+        TLog.d("onDisconnected()");
         mLeaderboardsClient = null;
     }
 
@@ -523,6 +551,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void shareToFacebook() {
+        loadingBar.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadingBar.setVisibility(View.INVISIBLE);
+            }
+        }, 1000);
         //这里分享一个链接，更多分享配置参考官方介绍：https://developers.facebook.com/docs/sharing/android
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
