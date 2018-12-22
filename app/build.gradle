@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
-def keystoreFile = new File("keystore.properties")
+def keystoreFile = rootProject.file("keystore.properties")//new File("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystoreFile))
 
