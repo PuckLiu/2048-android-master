@@ -1,6 +1,7 @@
 package com.uberspot.a2048.helper;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -92,9 +93,19 @@ public class TTCommonHelper {
         TTSharedPreferencesUtil.getInstance(context).put(key_show_rate_sec, sec);
     }
 
+    //强制跳转google play
     public void rateFiveStar(@NonNull Activity activity) {
         Uri uri = Uri.parse("market://details?id=" + activity.getPackageName());
-        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+        Intent it = new Intent(Intent.ACTION_MAIN);
+        it.setPackage("com.android.vending");// pkg为包名
+        it.addCategory(Intent.CATEGORY_LAUNCHER);
+        ComponentName ac = it.resolveActivity(activity.getPackageManager());
+        String classname = (ac == null ? null : ac.getClassName());
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        if (classname != null && !classname.equals("") && !classname.equals("null")) {
+            intent.setClassName("com.android.vending", classname);
+        }
+        TLog.v("classname:"+classname);
         activity.startActivity(intent);
-    }
+  }
 }
