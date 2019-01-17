@@ -10,6 +10,7 @@ import com.facebook.ads.CacheFlag;
 import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
 import com.uberspot.a2048.helper.TLog;
+import com.uberspot.a2048.helper.TTEventLog;
 
 import java.sql.Time;
 import java.util.EnumSet;
@@ -19,6 +20,8 @@ import java.util.EnumSet;
  */
 
 public class TTAdInterstitial extends TTAdBase implements InterstitialAdListener {
+
+    private final static String ADTAG = "TTAdInterstitial";
 
     public TTAdInterstitial(Context context, String string, AdSize size) {
         this.context = context;
@@ -89,7 +92,9 @@ public class TTAdInterstitial extends TTAdBase implements InterstitialAdListener
     @Override
     public void onError(Ad ad, AdError adError) {
         if (ad == this.ad) {
-            TLog.v("Interstitial onError:code:"+adError.getErrorCode()+" msg:"+ adError.getErrorMessage().toString());
+            TLog.v("Interstitial onError:code:"+adError.getErrorCode()+" msg:"+ adError.getErrorMessage());
+            TTEventLog.getInstance().LogAdFailed(ADTAG, adError.getErrorMessage());
+            TTEventLog.getInstance().LogEvent(ADTAG, "failed");
         }
     }
 
@@ -102,6 +107,8 @@ public class TTAdInterstitial extends TTAdBase implements InterstitialAdListener
             if (listener != null) {
                 listener.adLoaded();
             }
+            TTEventLog.getInstance().LogAdSuccess(ADTAG);
+            TTEventLog.getInstance().LogEvent(ADTAG, "success");
         }
     }
 

@@ -9,6 +9,7 @@ import com.facebook.ads.AdListener;
 import com.facebook.ads.AdSize;
 import com.facebook.ads.AdView;
 import com.uberspot.a2048.helper.TLog;
+import com.uberspot.a2048.helper.TTEventLog;
 
 /**
  * Created by liu on 2018/12/5.
@@ -16,6 +17,7 @@ import com.uberspot.a2048.helper.TLog;
 
 public class TTAdBanner extends TTAdBase implements AdListener{
 
+    private final String ADTAG = "TTAdBanner";
     public TTAdBanner(Context context, String string, AdSize size) {
         ad = new AdView(context,string,size);
     }
@@ -53,6 +55,8 @@ public class TTAdBanner extends TTAdBase implements AdListener{
     @Override
     public void onError(Ad ad, AdError adError) {
         TLog.v(TTAdBanner.class.toString(),"onError:" + adError.getErrorMessage() + " errCode:" + adError.getErrorCode());
+        TTEventLog.getInstance().LogEvent(ADTAG, "failed");
+        TTEventLog.getInstance().LogAdFailed(ADTAG, adError.getErrorMessage());
 
     }
 
@@ -65,6 +69,8 @@ public class TTAdBanner extends TTAdBase implements AdListener{
             if (listener != null) {
                 listener.adLoaded();
             }
+            TTEventLog.getInstance().LogEvent(ADTAG, "success");
+            TTEventLog.getInstance().LogAdSuccess(ADTAG);
         }
     }
 
