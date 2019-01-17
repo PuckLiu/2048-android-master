@@ -13,8 +13,8 @@ android {
         applicationId "com.smallgame.by2048"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 2
-        versionName "1.0"
+        versionCode 6
+        versionName "1.0.1"
         multiDexEnabled true
     }
 
@@ -85,14 +85,14 @@ android {
         normal{
             minSdkVersion 19
             targetSdkVersion 26
-            versionCode 5
-            versionName "1.0"
+            versionCode 6//线上
+            versionName "1.0.1"
         }
         special {
             minSdkVersion 19
             targetSdkVersion 26
-            versionCode 6
-            versionName "1.0"
+            versionCode 7
+            versionName "1.0.2"
         }
     }
 }
