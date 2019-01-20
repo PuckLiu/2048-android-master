@@ -3,6 +3,8 @@ package com.uberspot.a2048;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.uberspot.a2048.helper.TLog;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -18,7 +20,7 @@ public class TTSharedPreferencesUtil {
     public static final String key_first_open = "first_open";
     public static final String key_open_times = "open_times";
     public static final String key_rate_five = "rate_five";
-    public static final String key_show_rate_sec = "show_rate_sec";
+    public static final String key_show_rate_sec = "show_rate_sec_";
     public static final String key_userInfo_picture = "userInfo_picture";
 
     public static TTSharedPreferencesUtil instance = null;
@@ -68,6 +70,7 @@ public class TTSharedPreferencesUtil {
          * 获取保存的数据
          */
         public Object getSharedPreference(String key, Object defaultObject) {
+            TLog.v("key:"+key);
             if (defaultObject instanceof String) {
                 return sharedPreferences.getString(key, (String) defaultObject);
             } else if (defaultObject instanceof Integer) {
