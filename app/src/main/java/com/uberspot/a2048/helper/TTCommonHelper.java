@@ -79,18 +79,17 @@ public class TTCommonHelper {
     }
 
     public boolean needRate(Context context) {
-        if (BuildConfig.DEBUG) return true;
         if (!hasRate(context)) {
             long nowtime = new Date().getTime();
-            long lastShowTime = (long)TTSharedPreferencesUtil.getInstance(context).getSharedPreference(key_show_rate_sec,0L);
+            long lastShowTime = (long)TTSharedPreferencesUtil.getInstance(context).getSharedPreference(key_show_rate_sec + TTCommonUtil.getAppVersionCode(context),0L);
             long duration = BuildConfig.DEBUG ? 1 : 5*60*1000;
             return nowtime - lastShowTime > duration;
         }
-        return true;
+        return false;
     }
 
     public void setRateTime(Context context, long sec) {
-        TTSharedPreferencesUtil.getInstance(context).put(key_show_rate_sec, sec);
+        TTSharedPreferencesUtil.getInstance(context).put(key_show_rate_sec + + TTCommonUtil.getAppVersionCode(context), sec);
     }
 
     //强制跳转google play
